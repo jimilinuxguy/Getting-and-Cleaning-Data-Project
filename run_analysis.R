@@ -2,9 +2,13 @@
 rm(list=ls())
 project_directory <- "/Users/jimisanchez/coursera/Getting-and-Cleaning-Data-Project"
 setwd(project_directory)
+
+##Load the training data sets in
 train <- read.table("UCIHarDataset/train/X_train.txt", header=FALSE, sep = "")
 train <- cbind(train, read.table("UCIHarDataset/train/subject_train.txt"), read.table("UCIHarDataset/train/y_train.txt"))
 test <- read.table("UCIHarDataset/test/X_test.txt", header=FALSE, sep = "")
+
+## Merge the test and train subject datasets
 test <- cbind(test, read.table("UCIHarDataset/test/subject_test.txt"), read.table("UCIHarDataset/test/y_test.txt"))
 data <- rbind(train, test)
 
@@ -29,4 +33,9 @@ colnames(data) <- features
 labels <- colnames(data)[-c(562,563)]
 data2 <- lapply(X=labels, FUN=function(x) tapply(data[[x]], list(data$activity, data$subject), mean))
 names(data2) <- labels
-capture.output(data2, file = "tidy_data.txt")
+
+##Save resulting dataset to tidy_data.txt in the current working directory
+write.table(data2, file="tidy_data.txt", row.name=FALSE)
+
+## return cleaned tidy data, dat2 variable
+data2 
